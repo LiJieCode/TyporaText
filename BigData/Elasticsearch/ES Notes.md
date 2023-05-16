@@ -1,0 +1,2 @@
+# ElaxticSearch Notes
+
