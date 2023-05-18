@@ -239,13 +239,13 @@
     >   ```java
     >   // 拿着k和二叉树上的所有节点去比较，（这里理解可能还有点问题？？？？？？？？？？？？）
     >   // 先记好上面的规则吧
-    >               
+    >                 
     >   // 底层是二叉树（红黑树）
     >   cmp = k.compareTo(t.key);  // k - t.key < 0 => t < t.key 
     >   // 这是须有和左子节点比较。（升序）
     >   if (cmp < 0) t = t.lefe;
     >   else if (cmp > 0) t = t.right;
-    >               
+    >                 
     >   // 如果我们设置为：t.key - t  < 0 => t.key < t 这是须有和左子节点比较。 （降序了？？？？）
     >   ```
     >
@@ -1440,8 +1440,6 @@ HashShuffle，又分为普通的HashShuffle（每个task溢写下游task个数�
 
 
 
-
-
 - Spark join
 
 
@@ -1480,11 +1478,13 @@ Driver 负责创建 SparkContext 和 SparkSession
 
 SparkContext 负责创建RDD
 
- SparkSession 负责创建DF和DS
+SparkSession 负责创建DF和DS
 
 Driver 还负责管理广播变量和累加器
 
 
+
+Executor  的两个任务：
 
 Executor 负责对RDD和DS数据进行计算
 
@@ -1521,4 +1521,10 @@ spark对机器性能的要求相对较高，而且rdd并行计算需要依赖多
 分治，就是分而治之，将原本很大的数据集，拆分成多个小份，每台服务器只计算一部分，这样就可以显著提高效率。
 
 规约，就是将原本分散到各个服务器上的小份数据，进行再次合并，进一步计算得到最终结果。
+
+
+
+
+
+
 

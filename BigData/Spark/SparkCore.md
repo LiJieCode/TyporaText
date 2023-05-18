@@ -778,7 +778,8 @@ Spark 计算框架为了能够进行高并发和高吞吐的数据处理，封�
 
 - 案例实操  
 
-- RDD 行动算子 
+- <span style="color:blue; font-weight:bold">RDD 行动算子 </span>
+  
   - reduce
   - collect
   - count
@@ -791,18 +792,22 @@ Spark 计算框架为了能够进行高并发和高吞吐的数据处理，封�
   - countByKey
   - save 相关算子
   - foreach
-  
+
+
+
+
+
 - RDD 序列化   
   - 闭包检查
   - 序列化方法和属性
   - Kryo 序列化框架
 
 - RDD 依赖关系  
-  
+
   > RDD 不会保存数据，
   >
   > RDD 为了提供容错性，需要将RDD间的关系保存下来，一旦出现了错误，可以根据血缘关系重新读取数据，进行计算
-  
+
   - RDD 血缘关系
   - RDD 依赖关系
   - RDD 窄依赖
@@ -812,34 +817,34 @@ Spark 计算框架为了能够进行高并发和高吞吐的数据处理，封�
     - P96 - P98  未看
   - RDD 任务划分
   - RDD 任务划分源码
-  
+
 - RDD 持久化  
-  
+
   > RDD 是不存数据的，如果一个RDD 要重复使用，那个需要从头再次执行获取数据
   >
   > RDD 对象是可以重用的，但是数据无法重用
   >
   > 所以需要持久化操作
-  
+
   - RDD Cache 缓存
-  
+
     - RDD 通过 Cache 或者 Persist 方法将前面的计算结果缓存，默认情况下会把数据以缓存在 JVM 的堆内存中。但是并不是这两个方法被调用时立即缓存，而是触发后面的 action 算子时，该 RDD 将会被缓存在计算节点的内存中，并供后面重用。  
-  
+
     - ```scala
       // 数据缓存。
       rdd.cache()
       // 可以更改存储级别
       rdd.persist(StorageLevel.MEMORY_AND_DISK_2)
       ```
-  
+
       > RDD对象的持久化操作不一定是为了重用
       >
       > 在数据执行较长，或数据比较重要的场合也可以采用持久化操作
-  
+
   - RDD CheckPoint 检查点
-  
+
   - 缓存和检查点区别
-  
+
 - RDD 分区器  
 
 - RDD 文件读取与保存  
