@@ -239,13 +239,13 @@
     >   ```java
     >   // 拿着k和二叉树上的所有节点去比较，（这里理解可能还有点问题？？？？？？？？？？？？）
     >   // 先记好上面的规则吧
-    >           
+    >               
     >   // 底层是二叉树（红黑树）
     >   cmp = k.compareTo(t.key);  // k - t.key < 0 => t < t.key 
     >   // 这是须有和左子节点比较。（升序）
     >   if (cmp < 0) t = t.lefe;
     >   else if (cmp > 0) t = t.right;
-    >           
+    >               
     >   // 如果我们设置为：t.key - t  < 0 => t.key < t 这是须有和左子节点比较。 （降序了？？？？）
     >   ```
     >
@@ -1399,4 +1399,126 @@ Hive中的数据倾斜常出现在`分组聚合`和`join操作`的场景中，�
   ```
 
 
+
+
+
+## Spark
+
+- 什么是RDD
+
+分布式弹性数据集
+
+
+
+
+
+
+
+- 怎么理解DataFrame，DataSet
+
+
+
+
+
+- Spark shuffle
+
+分为shuffle write     shuffle read
+
+
+
+
+
+Spark 的shuffle发展有两种，起初是Hashshuffle，现在是sortshuffle
+
+
+
+HashShuffle会产生多个小文件落盘，sortshuffle是也会产生多个小文件，但是会聚合成一个大文件，在落盘，也就是一个服务器只溢写一个文件。（但是这里会引入索引文件，因为sort，排序嘛。所以下游task读取文件的时候，先找索引，再去溢写出的那一个文件中读取相应的部分数据），当然，不排序可以嘛？也可以，这就引出了bypass sortshuffle，他可以在sortshuffle的基础上，提高性能，因为不需要排序了嘛
+
+
+
+HashShuffle，又分为普通的HashShuffle（每个task溢写下游task个数的文件），和优化后的HashShuffle，每个服务器只溢写下游task个数的文件。
+
+
+
+
+
+- Spark join
+
+
+
+
+
+- Spark 调优，数据倾斜方案
+
+
+
+
+
+- Spark 的宽依赖（shuffle依赖）和窄依赖
+
+如果父RDD的一个分区数据只被子RDD的一个分区使用，叫窄依赖
+
+如果父RDD的一个分区数据只被子RDD的多个分区使用，叫宽依赖，shuffle依赖
+
+
+
+
+
+shuffle 一定会落盘
+
+shuflle落盘的数据量减少，可以提高性能
+
+算子如果存在预聚合功能，可以提高shuffle性能
+
+
+
+
+
+- Driver 和 Executor
+
+Driver 负责创建 SparkContext 和 SparkSession
+
+SparkContext 负责创建RDD
+
+ SparkSession 负责创建DF和DS
+
+Driver 还负责管理广播变量和累加器
+
+
+
+Executor 负责对RDD和DS数据进行计算
+
+Executor 负责对计算后的RDD和DS数据进行持久化存储
+
+
+
+
+
+- Spark为什么比MR快
+
+  - MR的计算只有mapper和Reducer两个阶段，Map端产生的数据也必须要落盘
+
+    而Spark每个stage尽量使用内存，大大提交效率
+
+  - 对于复杂的计算，MR会多个任务，每个任务，每个map后数据都会落盘
+
+    而Spark是基于DAG计算的，所以只需要启动一个job就可以了。
+
+当然，我们都知道spark还是基于mr的思想，只是针对性的做了很多优化。
+
+同时，我觉得并不是所有情况下spark都要比MapReduce快的。
+
+spark对机器性能的要求相对较高，而且rdd并行计算需要依赖多核CPU的支持，而Hadoop框架只在廉价的机器上就可以运行。所以我觉得机器的性能达不到的话，也可能MR会快点，但然我自己觉得。
+
+
+
+
+
+- MR的灵魂？
+
+在于Map 和 Reduce 两个阶段，分别就是分治和规约，
+
+分治，就是分而治之，将原本很大的数据集，拆分成多个小份，每台服务器只计算一部分，这样就可以显著提高效率。
+
+规约，就是将原本分散到各个服务器上的小份数据，进行再次合并，进一步计算得到最终结果。
 
