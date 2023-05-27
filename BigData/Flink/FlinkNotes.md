@@ -177,7 +177,7 @@
 
   Flink 是典型的 Master-Slave 架构的分布式数据处理框架，其中 Master 角色对应着JobManager， Slave 角色则对应 TaskManager。  
 
-  - 下载并解压安装包  
+  - 下载并解压安装包 
 
   - 修改集群配置
 
@@ -284,32 +284,55 @@
 
   - 在 Web UI 上提交作业  
 
+  > <span style="color:blue; font-weight:bold">说明：</span>
+  >
+  > - UI界面中，几个worker，就会有几个可用的任务槽（Task Slots）
+  >
+  > - 并行度会控制一个任务，用几个worker/任务槽（Task Slots）计算
+  >
+  > 
+  
   - 命令行提交作业
 
     - 首先需要启动集群
 
     - 在 l9z102 中执行以下命令启动 netcat
-
+  
       ```shell
       nc -lk 7777
       ```
-
+  
     - 进入到 Flink 的安装路径下，在命令行使用 flink run 命令提交作业。  
-
+  
       ```shell
       # 独立 - 会话模式
-      ./bin/flink run -m l9z102:8081 -c edu.lzu.flink.chapter02.WorkCount3 ./flink01-1.0-SNAPSHOT.jar --host l9z102 --port 7777
+      ./bin/flink run -m l9z102:8081 -c edu.lzu.flink.chapter02.WorkCount3 [-p 2] ./flink01-1.0-SNAPSHOT.jar --host l9z102 --port 7777
       ```
-
+  
       > 这里的参数 –m 指定了提交到的 JobManager， -c 指定了入口类
       >
       > `--host l9z102 --port 7777` 是程序入口类需要的参数
-
+  
     - 在浏览器中打开 Web UI，l9z102:8081 查看应用执行情况
-
+  
       用 netcat 输入数据，可以在 TaskManager 的标准输出（Stdout）看到对应的统计结果  
+  
+    - 命令行查看/取消作业
+  
+    ```shell
+    # 查看正在运行的作业
+    ./bin/flink list
+    
+    # 查看所有作业
+    ./bin/flink list -a
+    
+    # 取消作业
+    ./bin/flink cancel 任务ID
+    ```
+  
+    
 
-### 部署模式  
+### Flink的部署模式  
 
 在一些应用场景中，对于集群资源分配和占用的方式，可能会有特定的需求。 Flink 为各种场景提供了不同的部署模式，主要有以下三种：
 
@@ -317,7 +340,7 @@
 > - 单作业模式（Per-Job Mode）
 > - 应用模式（Application Mode）
 
-它们的区别主要在于：集群的生命周期、资源的分配方式；以及应用的 main 方法到底在哪里执行——客户端（Client）还是 JobManager。
+它们的区别主要在于：**集群的生命周期、资源的分配方式**；以及应用的 main 方法到底在哪里执行——客户端（Client）还是 JobManager。
 
 - 会话模式（Session Mode）
   - 会话模式其实最符合常规思维。我们需要先启动一个集群，保持一个会话，在这个会话中通过客户端提交作业。集群启动时所有资源就都已经确定，所以所有提交的作业会竞争集群中的资源。  
@@ -340,20 +363,19 @@
 
 ### 独立模式（Standalone）
 
-#### 
+
+
+
 
 ### Yarn 模式
 
 
 
-
-
 ```shell
 # yarn - 会话模式
+# 提交作业
 ./bin/flink run -c edu.lzu.flink.chapter02.WorkCount3 ./flink01-1.0-SNAPSHOT.jar --host l9z102 --port 7777
 ```
-
-
 
 
 
@@ -375,6 +397,65 @@
 
 ## 第 5 章 DataStream API（基础篇）  
 
+一个 Flink 程序，其实就是对 DataStream 的各种转换。具体来说，代码基本上都由以下几部分构成：
+
+- 获取执行环境（Execution Environment）
+- 读取数据源（Source）
+- 定义基于数据的转换操作（Transformations）
+- 定义计算结果的输出位置（Sink）
+- 触发程序执行（Execute）
+
+其中，获取环境和触发执行，都可以认为是针对执行环境的操作。所以本章我们就从执行环境、数据源（source）、转换操作（Transformation）、输出（Sink）四大部分，对常用的 DataStreamAPI 做基本介绍。  
+
+### 执行环境（Execution Environment）  
+
+#### 创建执行环境  
+
+#### 执行模式(Execution Mode)  
+
+在之前的 Flink 版本中，批处理的执行环境与流处理类似，是调用类 ExecutionEnvironment的静态方法，并返回它的对象：  
+
+```java
+// 批处理环境
+val batchEnv = ExecutionEnvironment.getExecutionEnvironment
+// 流处理环境
+val env = StreamExecutionEnvironment.getExecutionEnvironment
+```
+
+基于 `ExecutionEnvironment` 读入数据创建的数据集合，就是 `DataSet`；对应的调用的一整套转换方法，就是 `DataSet API`。
+
+而从 1.12.0 版本起， Flink 实现了 API 上的`流批统一`。 DataStream API 新增了一个重要特性：可以支持不同的“执行模式”（execution mode），通过简单的设置就可以让一段 Flink 程序在流处理和批处理之间切换。这样一来， DataSet API 也就没有存在的必要了。  
+
+- 流执行模式（STREAMING）  
+- 批执行模式（BATCH）  
+- 批执行模式（BATCH）  
+
+`val env = StreamExecutionEnvironment.getExecutionEnvironment`，由于 Flink 程序默认是 STREAMING 模式，我们这里重点介绍一下 BATCH 模式的配置。主要有两种方式：
+
+```shell
+# （1）通过命令行配置 批处理  -  推荐
+bin/flink run -Dexecution.runtime-mode=BATCH ...
+# 在提交作业时，增加 execution.runtime-mode 参数，指定值为 BATCH。
+
+
+# （2） 通过代码配置 批处理   -  不推荐
+val env = StreamExecutionEnvironment.getExecutionEnvironment
+env.setRuntimeMode(RuntimeExecutionMode.BATCH)  
+# 在代码中，直接基于执行环境调用 setRuntimeMode 方法，传入 BATCH 模式  
+```
+
+
+
+### 源算子（Source）  
+
+
+
+
+
+
+
+
+
 
 
 
@@ -382,6 +463,8 @@
 
 
 ## 第 6 章 Flink 中的时间和窗口  
+
+
 
 
 
@@ -397,7 +480,11 @@
 
 
 
+
+
 ## 第 8 章 多流转换  
+
+
 
 
 
