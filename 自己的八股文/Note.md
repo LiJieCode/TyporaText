@@ -239,13 +239,13 @@
     >   ```java
     >   // 拿着k和二叉树上的所有节点去比较，（这里理解可能还有点问题？？？？？？？？？？？？）
     >   // 先记好上面的规则吧
-    >                     
+    >                         
     >   // 底层是二叉树（红黑树）
     >   cmp = k.compareTo(t.key);  // k - t.key < 0 => t < t.key 
     >   // 这是须有和左子节点比较。（升序）
     >   if (cmp < 0) t = t.lefe;
     >   else if (cmp > 0) t = t.right;
-    >                     
+    >                         
     >   // 如果我们设置为：t.key - t  < 0 => t.key < t 这是须有和左子节点比较。 （降序了？？？？）
     >   ```
     >
@@ -1138,6 +1138,8 @@ select * from emp sort by deptno desc;
 
 
 
+
+
 - Spark参数配置
 
 
@@ -1602,6 +1604,103 @@ Driver 初始化 `SparkContext`过程中，会分别初始化 `DAGScheduler`、 
 
 
 
+
+## Hive  SQL 的优化
+
+#### 行列过滤  
+
+- 列的过滤：尽量不用select *，我们需要哪些列，就查询哪些列。
+
+- 行的过滤：在允许的情况下，最早使用where语句
+
+  > 举个例子：两个表关联，用id关联，然后取出id < 10的数据
+  >
+  > 一种方案是：先关联，最后where id < 10
+  >
+  > 另一种方案是：先对关联的表过滤出 id < 10 的数据，再关联
+
+#### 谓词下推 
+
+> 它就是将SQL语句中的where谓词逻辑都尽可能提前执行，减少下游处理的数据量。
+>
+> Hive中是默认开启的
+
+#### sort by代替order by 
+
+> order by 是全局排序，会使得所有的数据进入到一个reducer方法内排序
+>
+> 我们可以用sort by代替，sort by是分区内排序，所有sort by一般就和distribute by连用
+>
+> distribute by 是按某个字段分区，
+>
+> 如果没有distribute by，数据就会根据hash值分区，会很乱，
+
+#### group by代替distinct 
+
+> distinct 会将所有数据发往一个reducer，进行去重
+>
+> 我们可以用，group by 代替distinct 
+>
+> count(distinct 字段)  我们就可以先group by，再count
+>
+> ```sql
+> select count(distinct uid)
+> from calendar_record_log;
+> 
+> # 使用 group by 代替 distinct
+> select count(1)
+> from(
+>     select uid 
+>     from calendar_record_log
+>     group by uid
+> ) t;
+> ```
+
+### 数据倾斜
+
+- 分组聚合产生数据倾斜
+  - map端，预聚合
+  - skew group by 优化
+- join表产生数据倾斜
+  - 三种join
+    - join map端分区，发往reduce端join
+    - map join
+    - SMB map join 
+  - skewjoin
+- distinct 去重
+  - 用 group by 代替 distinct
+  - count(distinct 字段)   先group by 再count
+
+- 大表join大表
+  - 空值过滤，空值转换
+
+
+
+#### 调整mapper数 
+
+> map task 的个数其实我们不太关注吧，因为maptask的个数，主要是和切片信息有关。
+
+#### 调整reducer数 
+
+> 默认的话，是根据一个公式，给你估计一个reducer数
+>
+> 或者，你可以自己调节reducer个数
+
+#### 合并小文件 
+
+> map端的小文件合并，conbinerHiveInputFormat(默认也是这个)。
+>
+> reduer端，也可以开启输出的小文件合并。
+
+启用压缩 
+
+JVM重用 
+
+并行执行与本地模式 
+
+严格模式 
+
+采用合适的存储格式
 
 
 
