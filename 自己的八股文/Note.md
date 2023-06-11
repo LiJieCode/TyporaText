@@ -239,13 +239,13 @@
     >   ```java
     >   // 拿着k和二叉树上的所有节点去比较，（这里理解可能还有点问题？？？？？？？？？？？？）
     >   // 先记好上面的规则吧
-    >                         
+    >                           
     >   // 底层是二叉树（红黑树）
     >   cmp = k.compareTo(t.key);  // k - t.key < 0 => t < t.key 
     >   // 这是须有和左子节点比较。（升序）
     >   if (cmp < 0) t = t.lefe;
     >   else if (cmp > 0) t = t.right;
-    >                         
+    >                           
     >   // 如果我们设置为：t.key - t  < 0 => t.key < t 这是须有和左子节点比较。 （降序了？？？？）
     >   ```
     >
@@ -842,7 +842,14 @@ CREATE [EXTERNAL] TABLE [IF NOT EXISTS] table_name
   property_name=property_value, ...)]
   ```
 
-  
+
+> **建表语句的序列化，反序列化，inputformat，outputformat，都有默认值，可以看视频：电商数仓5-P89**
+
+
+
+
+
+
 
 ### Hive的分区
 
