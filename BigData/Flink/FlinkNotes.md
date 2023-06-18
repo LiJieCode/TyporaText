@@ -395,6 +395,8 @@
 
 
 
+
+
 ## 第 5 章 DataStream API（基础篇）  
 
 一个 Flink 程序，其实就是对 DataStream 的各种转换。具体来说，代码基本上都由以下几部分构成：
@@ -430,7 +432,7 @@ val env = StreamExecutionEnvironment.getExecutionEnvironment
 - 批执行模式（BATCH）  
 - 批执行模式（BATCH）  
 
-`val env = StreamExecutionEnvironment.getExecutionEnvironment`，由于 Flink 程序默认是 STREAMING 模式，我们这里重点介绍一下 BATCH 模式的配置。主要有两种方式：
+<span style = "color:blue; font-weight:bold">`val env = StreamExecutionEnvironment.getExecutionEnvironment`</span>，<span style = "color:red; font-weight:bold">由于 Flink 程序默认是 STREAMING 模式</span>，我们这里重点介绍一下 BATCH 模式的配置。主要有两种方式：
 
 ```shell
 # （1）通过命令行配置 批处理  -  推荐
@@ -447,6 +449,22 @@ env.setRuntimeMode(RuntimeExecutionMode.BATCH)
 
 
 ### 源算子（Source）  
+
+#### 读取有界
+
+
+
+
+
+#### 读取Kafka
+
+
+
+
+
+#### 读取自定义数据源
+
+#### Flink 支持的数据类型  
 
 
 
