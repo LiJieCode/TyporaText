@@ -305,6 +305,18 @@ A weak Galerkin mixed finite element method for second order elliptic problems_2
 
 
 
+## 宋老师给的建议
+
+- 曲边界面也可以使用等几何分析和弱有限元来做，你可以查一下美国德州大学Austin分校Hughs的文章。看到这个会议我突然想起来这个办法。
+
+- 数值算例中的界面不用太复杂，翟起龙他们的做法也是可取的，能算到五阶逼近元。
+
+
+
+- 湖南师范大学，
+
+
+
 
 
 
