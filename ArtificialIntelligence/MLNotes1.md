@@ -20,3 +20,4 @@
 
   - 特征提取(Feature Extraction)对于机器学习来说，是非常重要的。
 
+![image](./images/002.jpg)

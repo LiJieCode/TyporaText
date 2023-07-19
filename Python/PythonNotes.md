@@ -57,7 +57,7 @@
 
       > 详细见文章：[jupyter使用anaconda虚拟环境](https://blog.csdn.net/qq_53564294/article/details/121296191)
 
-- jupyter代码补全
+- **jupyter代码补全**
 
   - 安装jupyter_contrib_nbextensions
 
@@ -74,7 +74,30 @@
   - 在Jupyter Notebook里开启功能
 
 
-- 
+
+## Python集合数据结构
+
+### 列表 - list
+
+
+
+
+
+
+
+### 字典
+
+
+
+
+
+### 
+
+
+
+
+
+
 
 
 
