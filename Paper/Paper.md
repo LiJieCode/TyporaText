@@ -291,12 +291,6 @@ A weak Galerkin mixed finite element method for second order elliptic problems_2
 
 
 
-
-
-
-
-
-
 众所周知，跳跃条件可用于唯一定义材料界面上的线性IFE基函数。
 
 界面跳转条件不足以唯一地确定更高阶IFE基函数。
@@ -313,7 +307,22 @@ A weak Galerkin mixed finite element method for second order elliptic problems_2
 
 
 
-- 湖南师范大学，
+- 湖南师范大学，华南师范大学，陈艳萍；
+- 汪艳秋
+
+
+
+
+
+## 自己的思考
+
+非齐次问题
+
+曲边积分
+
+
+
+
 
 
 
