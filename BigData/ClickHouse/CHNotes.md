@@ -46,7 +46,7 @@
 - 安装依赖  
 
   ```shell
-   sudo yum install -y libtool
+  sudo yum install -y libtool
   
   sudo yum install -y *unixODBC*
   
@@ -71,6 +71,8 @@
 
 ### 2.2 单机安装  
 
+> 官网：clickhouse.tech
+
 > 才单机安装，集群安装的话
 >
 > - 将安装包发放到其他服务器
@@ -80,7 +82,48 @@
 
 
 
+> clickhouse 版本
+>
+> 20.5：
+>
+> 20.6.3：支持explain
+>
+> 20.8：
+>
+> 这里安装的是21.7.3
 
+- 安装命令
+
+  ```shell
+  [lijzh@l9z102 clickhouse]$ ll
+  总用量 938164
+  -rw-r--r-- 1 lijzh lijzh     78074 7月  27 2021 clickhouse-client-21.7.3.14-2.noarch.rpm
+  -rw-r--r-- 1 lijzh lijzh 174283244 7月  27 2021 clickhouse-common-static-21.7.3.14-2.x86_64.rpm
+  -rw-r--r-- 1 lijzh lijzh 786208040 7月  27 2021 clickhouse-common-static-dbg-21.7.3.14-2.x86_64.rpm
+  -rw-r--r-- 1 lijzh lijzh    101969 7月  27 2021 clickhouse-server-21.7.3.14-2.noarch.rpm
+  
+  # 安装命令
+  sudo rpm -ivh *.rpm
+  
+  # 检查是否安装成功
+  rpm -qa|grep clickhouse
+  
+  [lijzh@l9z102 clickhouse]$ rpm -qa|grep clickhouse
+  clickhouse-common-static-21.7.3.14-2.x86_64
+  clickhouse-server-21.7.3.14-2.noarch
+  clickhouse-common-static-dbg-21.7.3.14-2.x86_64
+  clickhouse-client-21.7.3.14-2.noarch
+  ```
+
+  > <span style="color:blue; font-weight:bold">关于安装内容的备注：重要重要重要重要</span>
+  >
+  > tar.gz包，直接tar -zxvf解压到指定目录，即可安装成功
+  >
+  > rpm、yum 安装命令，安装之后，安装内容要去系统内容存放的地址去找
+  >
+  > - /ect/clickhouse-    (存放配置文件)
+  > - /var/lib/clickhouse   (存放)
+  > - /usr/bin、/usr/sbin、找不到加local
 
 - 安装目录对应关系
 
@@ -96,10 +139,28 @@
   log/      /var/1og/clickhouse
   ```
 
+- 修改配置文件 `root用户  cd /etc/clickhouse-server`
+
+  ```shell
+   >>> vim config.xml
+   
+   # 这里可以配置clickhouse的一些相关路径
+  ```
+
 - 启动服务
 
   ```shell
+  ps -ef |grep mysql
+  
+  >>> sudo systemctl status clickhouse-server
+  
+  
+  
+  # 启动clickHouse 服务，官放提供方式
   sudo clickhouse start/stop/restart
+  
+  # 关闭开机自启动服务
+  sudo systemctl disable clickhouse-server
   ```
 
 - 连接clickhouse
@@ -108,7 +169,19 @@
   clickhouse-client --password li123... -m
   ```
 
-  
+  > `-m`：以`;`为结束符，可以随意换行
+
+- 
+
+
+
+
+
+
+
+
+
+
 
 
 
