@@ -2,7 +2,7 @@
 
 
 
-## 第一章
+## Remark
 
 
 
@@ -159,7 +159,7 @@
   # 启动clickHouse 服务，官放提供方式
   sudo clickhouse start/stop/restart
   
-  # 关闭开机自启动服务
+  # 关闭开机自启动服务（生产环境下，肯定不会关的，自己的虚拟机，平常不用，要关一下）
   sudo systemctl disable clickhouse-server
   ```
 
@@ -171,7 +171,24 @@
 
   > `-m`：以`;`为结束符，可以随意换行
 
-- 
+### 2.3 集群安装
+
+- 单机版的不需要启动zookeeper，如果安装集群版的clickhouse，要启动zookeeper。
+
+
+
+
+
+## 第 3 章 数据类型
+
+> 关于null值
+>
+> Mysql：存储为null
+>
+> Hive：存储为/N（数据存储在HDFS中）
+
+- Nullable(Int8)
+  - <span style="color:blue; font-weight:bold">在使用Nullable时，几乎总是对性能产生负面影响，请注意这一点。</span>
 
 
 
@@ -179,11 +196,68 @@
 
 
 
+## 第 4 章 表引擎的使用
+
+> - clickhouse的数据默认存储在本地：cd /var/lib/clickhouse/data  (也可以集成到MySQL，Kafka)
+> - 特别注意：创建clickhouse表必须指明引擎，引擎的名称大小写敏感（大驼峰命名规范）
+
+
+
+### TinyLog  
+
+- 测试用，生产不会用
+
+
+
+### Memory  
+
+- 内存引擎，一般生产也不会用
+
+
+
+### MergeTree  
+
+<span style="color:blue; font-weight:bold">ClickHouse 中最强大的表引擎当属 MergeTree（合并树）引擎及该系列（*MergeTree）中的其他引擎</span>。
+
+支持索引和分区， 地位可以相当于 Innodb 之于 Mysql。 
+
+而且基于 MergeTree，还衍生除了很多小弟，也是非常有特色的引擎  
+
+> MySQL 的存储引擎，Innodb，MyISAM，
 
 
 
 
 
+
+
+### ReplacingMergeTree  
+
+
+
+
+
+### SummingMergeTree  
+
+
+
+
+
+
+
+## 第 5 章 SQL操作
+
+
+
+
+
+## 第 6 章 副本
+
+
+
+
+
+## 第 7 章 分片集群
 
 
 

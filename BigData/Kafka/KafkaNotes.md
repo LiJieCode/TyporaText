@@ -154,7 +154,7 @@
 
   - 启动集群  
 
-    - 先启动 Zookeeper 集群，然后启动 Kafka。  
+    - <span style="color:red; font-weight: bold">先启动 Zookeeper 集群，然后启动 Kafka。  </span>
 
     - 依次在 l9z102、 l9z103、 l9z104节点上启动 Kafka。  
 
@@ -198,7 +198,7 @@
   esac
   ```
 
-  > <span style="color:red; ">注意： 停止 Kafka 集群时，一定要等 Kafka 所有节点进程全部停止后再停止 Zookeeper集群。因为 Zookeeper 集群当中记录着 Kafka 集群相关信息， Zookeeper 集群一旦先停止，Kafka 集群就没有办法再获取停止进程的信息，只能手动杀死 Kafka 进程了。  </span>
+  > <span style="color:red; font-weight: bold">注意： 停止 Kafka 集群时，一定要等 Kafka 所有节点进程全部停止后再停止 Zookeeper集群。因为 Zookeeper 集群当中记录着 Kafka 集群相关信息， Zookeeper 集群一旦先停止，Kafka 集群就没有办法再获取停止进程的信息，只能手动杀死 Kafka 进程了。  </span>
 
 ### Kafka命令行操作
 
