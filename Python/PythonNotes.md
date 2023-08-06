@@ -41,7 +41,7 @@
 
     - 安装ipykernel，并进行相关操作
 
-      ```
+      ```shell
       conda install --user ipykernel
       # 其中“--user”可以不键入，对本虚拟环境无影响
       
@@ -57,7 +57,7 @@
 
       > 详细见文章：[jupyter使用anaconda虚拟环境](https://blog.csdn.net/qq_53564294/article/details/121296191)
 
-- **jupyter代码补全**
+- <span style= "color:blue; font-weight:bold">jupyter代码补全</span>
 
   - 安装jupyter_contrib_nbextensions
 
@@ -77,23 +77,92 @@
 
 ## Python集合数据结构
 
+> 参考：Python3基础教程（廖雪峰）
+
 ### 列表 - list
 
+list 是一种有序的集合，可以随时添加和删除其中的元素。list 是一个可变的有序表，可以往 list 中追加元素到末尾(`append`)，也可以把元素插入到指定的位置(`insert(index, element)`)
+
+```python
+list1 = [1,2,3,4,5]
+list2 = ["hello", "zhang", "you"]
+list3 = [1,2,3,"hello]
+```
+
+
+
+
+
+### 元组 tuple
+
+tuple 和 list 非常类似，但是 tuple 一旦初始化就不能修改。不可变的 tuple 有什么意义？因为 tuple 不可变，所以代码更安全。如果
+可能，能用 tuple 代替 list 就尽量用 tuple。
+
+```python
+(1,2,3,4)
+```
+
+
+
+
+
+### 字典 dict
+
+dict 全称 dictionary，在其他语言中也称为 map，使用键-值（ key-value）存储，具有极快的查找速度。
+
+```python
+dict1 = {key: value, key2: value2}
+dict1 = dict({key: value, key2: value2})
+
+# 例如：
+d = {'Michael': 95, 'Bob': 75, 'Tracy': 85}
+```
+
+
+
+
+
+### 集合 set
+
+set 和 dict 类似，也是一组 key 的集合，但不存储 value。由于 key 不能重复，所以，在 set 中，没有重复的 key。
+
+```python
+s = {1,2,3,4}
+```
 
 
 
 
 
 
-### 字典
+
+## 数据分析
+
+首先，Python更加简单。Python语法更加接近英文自然语言，学习路径短，有大量的图书和网络资料。
+
+其次，Python生态更加完善。
+
+在数据科学领域有许多强大的库来满足我们不同的需求，如数据获取（Scrapy、BeautifulSoup）、科学计算（NumPy、SciPy、PyTorch）、可视化（Matplotlib、Seaborn）、机器学习（scikit-learn、TensorFlow）等。
+
+最后，Python更加通用，Python几乎可以应用在所有领域。
+
+### Numpy
 
 
 
+### Pandas
 
 
-### 
+
+### Matplotlib
 
 
+
+### Seaborn
+
+
+
+### Scikit-Learn
 
 
 
