@@ -109,11 +109,12 @@
 - 拼接和拆分
 
   ```python
-  #cat
+  # cat 直接拼接
+  torch.cat([a1, a2], dim/axis = 1)
   
-  # stack
+  # stack 创建一个新维度拼接
   
-  # split
+  # split 
   
   # chunk
   ```
@@ -230,7 +231,22 @@
 
 ## Loss函数及其梯度
 
+- Mean Squared Error
 
+$$
+loss =\sum[y-(xw+b)]^2
+$$
+
+```python
+```
+
+
+
+- Cross Entropy Loss
+  - binary
+  - multi-class
+  - +softmax
+  - Logistic Regression
 
 
 
