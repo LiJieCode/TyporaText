@@ -152,7 +152,7 @@ df.columns  # 列索引
 
 # 排序
 # sort_index
-df.sort_index(ascending = False,axis = 1)  # 默认升序(ascending=True)，axis = 0
+df.sort_index(ascending = False, axis = 1)  # 默认升序(ascending=True)，axis = 0
 df.sort_index(axis=1)
 df.sort_index(ascending = False)
 # sort_values

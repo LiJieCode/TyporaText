@@ -1,4 +1,4 @@
-# HBaseNotes
+# gHBaseNotes
 
 ## Remark
 

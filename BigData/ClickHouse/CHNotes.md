@@ -185,7 +185,7 @@
 >
 > Mysql：存储为null
 >
-> Hive：存储为/N（数据存储在HDFS中）
+> Hive：存储为 /N（数据存储在HDFS中）
 
 - Nullable(Int8)
   - <span style="color:blue; font-weight:bold">在使用Nullable时，几乎总是对性能产生负面影响，请注意这一点。</span>
