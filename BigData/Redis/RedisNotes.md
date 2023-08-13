@@ -24,7 +24,7 @@
 
 ### Redis安装**
 
-
+> P9 - P10
 
 - 把redis7自带的配置文件拷贝一份，放到/myredis/**redis.conf**
 - 修改拷贝的配置文件**redis.conf**
