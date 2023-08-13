@@ -226,6 +226,28 @@ HBase 的设计理念依据 Google 的 BigTable 论文，论文中对于数据�
             <value>hdfs://l9z102:8020/hbase</value>
             <description>The directory shared by RegionServers.</description>
         </property>
+    
+    
+    
+    
+    
+        <!-- phoenix regionserver 配置参数 二级索引配置文件 -->
+        <property>
+            <name>hbase.regionserver.wal.codec</name>
+            <value>org.apache.hadoop.hbase.regionserver.wal.IndexedWALEditCodec</value>
+        </property>
+    
+        <!-- 注意：为了开启 hbase 的 namespace 和 phoenix 的 schema 的映射，在程序中需要加这个配置文件，
+        另外在 linux 服务上，也需要在 hbase 以及 phoenix 的 hbase-site.xml 配置文件中，加上以上两个配置，
+        并使用 xsync 进行同步（本节 1 中文档已有说明） -->
+        <property>
+            <name>phoenix.schema.isNamespaceMappingEnabled</name>
+            <value>true</value>
+        </property>
+        <property>
+            <name>phoenix.schema.mapSystemTablesToNamespace</name>
+            <value>true</value>
+        </property>
     ```
 
     > hbase.cluster.distributed = true 表示要部署一个分布式的HBase
@@ -233,6 +255,10 @@ HBase 的设计理念依据 Google 的 BigTable 论文，论文中对于数据�
     > 
     >
     > hdfs://l9z102:8020/hbase  表示<span style="color:blue; font-weight:bold">hbase的数据存储位置为：</span><span style="color:red; font-weight:bold">/hbase</span>
+    >
+    > 
+    >
+    > <span style="color:red; font-weight:bold">注意：</span>Hbase的配置文件hbase-site.xml，修改完后，要分发给其他集群。然后再复制到phoenix的bin目录中。
 
   - regionservers配置文件，集群部署
 
@@ -272,6 +298,8 @@ HBase 的设计理念依据 Google 的 BigTable 论文，论文中对于数据�
     ```
     bin/start-hbase.sh
     ```
+
+    > 启动HBase，首先启动  <span style="color:red; font-weight:bold">hadoop和zookeeper</span>
 
   - 对应的停止服务 
 
@@ -325,6 +353,8 @@ HBase 的设计理念依据 Google 的 BigTable 论文，论文中对于数据�
     ```
   
   > <span style="color:red; font-weight:bold">配置了高可用之后，关闭集群要在真正的master上关闭，因为元数据存储在master上。</span>
+  >
+  >  <span style="color:blue; font-weight:bold">高可用已经部署</span>
 
 ### HBase Shell 操作
 
@@ -446,8 +476,10 @@ HBase 的设计理念依据 Google 的 BigTable 论文，论文中对于数据�
 
   - 删除表 
 
-    shell 中删除表格,需要先将表格状态设置为不可用。  
+    <span style="color:blue; font-weight:bold">删除表，分两步。</span>
 
+    shell 中删除表格，需要先将表格状态设置为不可用。  
+    
     ```shell
     disable 'student1'
     drop 'student1'
@@ -767,19 +799,83 @@ ConnectionFactory
 
 ## 整合 Phoenix  
 
+> <span style="color:red; font-weight:bold">Hbase 中存储的默认是字符串，数字也会转换成字符串。</span>
+
 ### Phoenix 部署
 
+> 官方网址：phoenix.apache.org
 
-
-
+- 已部署完毕！环境变量已配置完毕！
 
 - 启动phoenix
+
+  > 连接zookeeper的地址。
+  >
+  > 直接运行下面命令，启动phoenix
 
   ```shell
   sqlline.py l9z102,l9z2103,l9z104:2181
   ```
-
   
+
+
+
+### Phoenix 的使用
+
+- 查表：!tables / !table
+- 查询：select * from table_name
+- 
+
+- 表的映射（hbase与phoenix表的映射）
+
+  - 创建Hbase表
+
+  ```shell
+  create 'test', 'info1', 'info2'
+  ```
+
+  - 插入数据
+
+  ```shell
+  put 'test', 'info1:name', 'zhangsan'
+  put 'test', 'info2:age', 18
+  ```
+
+  - phoenix 创建视图
+
+  ```sql
+  create view "test"(
+  id varchar primary key,
+  "info1"."name" varchar,
+  "info2"."age" varchar
+  ) column_encoded_bytes = 0;
+  
+  create view "test"(
+  id varchar primary key,
+  "info1"."name" varchar,
+  "info1"."age" varchar,
+  "info2"."age" varchar
+  ) column_encoded_bytes = 0;
+  ```
+
+  - phoenix 创建表映射
+
+  ```shell
+  create table "test"(
+  id varchar primary key,
+  "info1"."name" varchar,
+  "info1"."age" varchar,
+  "info2"."age" varchar
+  ) column_encoded_bytes = 0;
+  ```
+
+  > <span style="color:red; font-weight:bold">表映射的删除表，会把Hbase中的表也删除。</span>
+  >
+  > 映射的时候，如果是数字，会有bug。请慎用！
+
+
+
+### Phoenix JDBC 操作
 
 
 
@@ -842,6 +938,8 @@ explain select age,name from student where age = 10;
 ## 与Hive集成
 
 ### 使用场景  
+
+
 
 如果大量的数据已经存放在 HBase 上面，需要对已经存在的数据进行数据分析处理，那么 Phoenix 并不适合做特别复杂的 SQL 处理，此时可以使用 hive 映射 HBase 的表格，之后写 HQL 进行分析处理。  
 

@@ -163,7 +163,7 @@
   sudo systemctl disable clickhouse-server
   ```
 
-- 连接clickhouse
+- 连接clickhouse （和MySQL 类似）
 
   ```shell
   clickhouse-client --password li123... -m
