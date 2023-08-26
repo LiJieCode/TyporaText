@@ -6,6 +6,27 @@
 
 
 
+> 怎么刷题？
+>
+> - 分类
+> - 
+
+
+
+- 刷题计划
+  - 20230821-周一：复习动态规划（Java中的集合）
+  - 20230822-周二：复习链表，队列，
+  - 20230822-202308xx：刷题回溯算法
+  - 
+
+
+
+## Java集合汇总
+
+- 
+
+
+
 
 
 ## 链表
@@ -159,11 +180,26 @@ public class Solution {
 
 
 
-
-
-
-
 ## 二分查找
+
+- 经典二分查找代码
+
+```java
+public int search(int[] nums, int target) {
+		// 定义左右端点
+    int left = 0, right = nums.length - 1;
+		// 二分查找
+    while (left < right) {
+        int mid = left + (right - left) / 2;
+
+        int num = nums[mid];
+        if (num == target) return mid;
+        else if (nums[mid] > target) right = mid - 1;
+        else left = mid + 1;
+    }
+    return -1;
+}
+```
 
 
 

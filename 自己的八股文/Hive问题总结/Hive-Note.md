@@ -336,10 +336,10 @@
 >   ```sql
 >   # 开启合并 Hive on Spark 任务输出的小文件
 >   set hive.merge.sparkfiles = true;           # 默认false
->   
+>     
 >   # 开启合并 Hive on MR 任务输出的小文件
 >   set hive.merge.mapredfiles = true;          # 默认false
->   
+>     
 >   # 合并大小， 默认 256M
 >   SET hive.merge.size.per.task = 268435456;
 >   # 当输出文件的平均大小小于该值时，启动一个独立的 map-reduce 任务进行文件 merge
@@ -538,7 +538,7 @@
 >     ```sql
 >     select * from table_name
 >     distribute by deptno sort by deptno;  # 按部门分区，按部分排序，此时可以简化成下面的 
->     
+>         
 >     select * from table_name
 >     cluster by deptno;   # 直接用 cluster by
 >     ```
