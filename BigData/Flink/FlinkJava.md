@@ -77,9 +77,9 @@ graph LR;
   - 时间窗口
   - 计数窗口
 - 按照窗口分配数据的规则分类
-  - 滚动
+  - 滚动 - Tumbling
     - 基于**时间**的滚动窗口:  sensorKS.window(TumblingProcessingTimeWindows.of(Time.seconds(10)));  // 滚动窗口，窗口长度10秒
-  - 滑动:  (窗口大小，滑动步长)
+  - 滑动:  (窗口大小，滑动步长) - Sliding
     - 基于**时间**的滑动窗口:  sensorKS.window(SlidingProcessingTimeWindows.of(Time.seconds(10), Time.seconds(5)));  //滑动窗口，长度10s，步长5s
     - 基于计数的滑动窗口:  sensorKS.countWindow(5, 2); //滑动窗口，窗口长度5条数据，滑动步长2条数据（每经过一个步长，都有一个窗口触发输出，每次输出5条数据，第一次输出在第2条数据来的时候）
   - 会话 session
@@ -130,6 +130,12 @@ graph LR;
 ### 时间语义（P73）
 
 
+
+事件时间，处理时间
+
+
+
+interval join 只支持事件时间
 
 
 
